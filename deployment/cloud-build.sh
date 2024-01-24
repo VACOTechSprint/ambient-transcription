@@ -18,9 +18,13 @@ gcloud artifacts repositories list
 gcloud builds submit --region=us-west2 --tag us-west2-docker.pkg.dev/$PROJECT_ID/vacotechsprint/whisperx:tag1
 gcloud builds submit --tag gcr.io/$PROJECT_ID/whisperx:tag1
 
-gcloud builds submit --tag gcr.io/$PROJECT_ID/whisperx --gcs-source-staging-dir=gs://[BUCKET_NAME]/source --gcs-log-dir=gs://[BUCKET_NAME]/logs .
+# Using the DennisTheD/whisper-asr-webservice
+```cloudbuild.yml
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/vacotechsprint/whisperx-asr-webservice', '-f', 'Dockerfile.gpu', '.']
+images:
+  - 'gcr.io/vacotechsprint/whisperx-asr-webservice'
 
-
-# Docker container directly to hub
-gcloud auth configure-docker
-docker tag onerahmet/openai-whisper-asr-webservice:latest-gpu gcr.io/[PROJECT-ID]/openai-whisper-asr-webservice:latest-gpu   - Push the `docker push gcr.io/[PROJECT-ID]/openai-whisper-asr-webservice:latest-gpu`.
+```
+gcloud builds submit --config cloudbuild.yaml
