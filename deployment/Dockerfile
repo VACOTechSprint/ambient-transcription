@@ -1,27 +1,48 @@
-# Use an image that has conda and python installed
-FROM continuumio/miniconda3
+FROM swaggerapi/swagger-ui:v4.18.2 AS swagger-ui
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
-# Set the working directory
+ENV PYTHON_VERSION=3.10
+ENV POETRY_VENV=/app/.venv
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && apt-get -qq update \
+    && apt-get -qq install --no-install-recommends \
+    python${PYTHON_VERSION} \
+    python${PYTHON_VERSION}-venv \
+    python3-pip \
+    ffmpeg \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python3 && \
+    ln -s -f /usr/bin/python${PYTHON_VERSION} /usr/bin/python && \
+    ln -s -f /usr/bin/pip3 /usr/bin/pip
+
+RUN python3 -m venv $POETRY_VENV \
+    && $POETRY_VENV/bin/pip install -U pip setuptools \
+    && $POETRY_VENV/bin/pip install poetry==1.6.1
+
+ENV PATH="${PATH}:${POETRY_VENV}/bin"
+
 WORKDIR /app
 
-# Create a new conda environment with Python 3.10
-RUN conda create --name whisperx python=3.10
-RUN echo "source activate whisperx" > ~/.bashrc
-ENV PATH /opt/conda/envs/whisperx/bin:$PATH
+COPY poetry.lock pyproject.toml ./
 
-# Activate the environment and install PyTorch and dependencies
-RUN /bin/bash -c "source activate whisperx && \
-    conda install --yes pytorch==2.0.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia"
+RUN poetry config virtualenvs.in-project true
+RUN poetry install --no-root
 
-# Install WhisperX from the GitHub repository
-RUN pip install git+https://github.com/m-bain/whisperx.git
+COPY . .
+COPY --from=swagger-ui /usr/share/nginx/html/swagger-ui.css swagger-ui-assets/swagger-ui.css
+COPY --from=swagger-ui /usr/share/nginx/html/swagger-ui-bundle.js swagger-ui-assets/swagger-ui-bundle.js
 
-# Install additional dependencies (ffmpeg, rust, etc.)
-# Note: These commands are placeholders and should be replaced with actual installation commands as needed.
-RUN apt-get update && apt-get install -y ffmpeg
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+RUN poetry install
+RUN /app/.venv/bin/pip install torch torchaudio pandas transformers nltk pyannote.audio \
+    --index-url https://download.pytorch.org/whl/cu118 \
+    --index-url https://pypi.org/simple/
 
-# Set the default command to run WhisperX
-# Note: This command is a placeholder. Replace 'sample01.wav' with the actual file you want to process,
-# or modify the Dockerfile to accept the filename as an argument.
-CMD ["whisperx", "examples/sample01.wav"]
+RUN git clone --depth 1 https://github.com/m-bain/whisperX.git \
+    && cd whisperX \
+    && $POETRY_VENV/bin/pip install --no-dependencies -e .
+
+EXPOSE 9000
+CMD gunicorn --bind 0.0.0.0:9000 --workers 1 --timeout 0 app.webservice:app -k uvicorn.workers.UvicornWorker
