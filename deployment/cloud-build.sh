@@ -71,4 +71,4 @@ sudo bash add-google-cloud-ops-agent-repo.sh --also-install
 
 docker pull gcr.io/vacotechsprint/whisperx-asr-webservice
 
-docker run -d -p 9000:9000 -e ASR_MODEL=base -e ASR_ENGINE=openai_whisper gcr.io/vacotechsprint/whisperx-asr-webservice
+docker run -d --gpus all -p 9000:9000 -e ASR_MODEL=base -e ASR_ENGINE=openai_whisper gcr.io/vacotechsprint/whisperx-asr-webservice
