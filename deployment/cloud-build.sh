@@ -62,9 +62,12 @@ gcloud compute --project=vacotechsprint firewall-rules create whisper-asr --desc
 
 
 # install Ops agent
-# not needed when including --labels=goog-ops-agent-policy=v2-x86-template-1-1-0
+# shouldn't be needed when including --labels=goog-ops-agent-policy=v2-x86-template-1-1-0
+# but instance isn't eligible for some reason
 sudo apt-get update --allow-releaseinfo-change
+curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
 sudo bash add-google-cloud-ops-agent-repo.sh --also-install
+
 
 docker pull gcr.io/vacotechsprint/whisperx-asr-webservice
 
