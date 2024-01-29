@@ -33,10 +33,6 @@ resource "google_compute_instance" "whisperx_asr" {
 
   machine_type = "n1-highmem-4"
 
-  metadata = {
-    ssh-keys = "dahifi:ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNrvjg1D+tS4LLT90QivaBO6xqIJz8vv4JpG21bz76ntIrlZNfC7k8cpb2DxBWC7K69vzGEKfiqpBjvA0wv7wNw= google-ssh {\"userName\":\"dahifi@gmail.com\",\"expireOn\":\"2024-01-29T15:34:04+0000\"}\ndahifi:ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAGrMm+AQ22jY9xXjyv+/t3zqN9PNn1QcJshuCu3sqFOI9rPY39LQ/7pEEoe7T4fOWR6Keh18BzWci31yurf/c4azEJ7KQXvEQua9L4HdrJWhTN5py8lj/27kdYcnzEOX3sbrS0jTk7tb3Zqsd6+YTglDM7abRzwZ6SBTyf3G2e8uhGFiCu9P4XfEhxAlrepyB5wEE9szkO2CURIZBcuTt8QT6Q9/lQ3E9tP04LcpuW3bfjzTc3+YetI831dOkWH8M9WVl8mdlWFYt4NHIhdMM62+Ge6wlFyn6MdEQKnqSoNYja+PtShTijRdcTLoUE7t3G3AiKsrfardF/5X5BhIXqE= google-ssh {\"userName\":\"dahifi@gmail.com\",\"expireOn\":\"2024-01-29T15:34:18+0000\"}"
-  }
-
   name = "whisperx-asr"
 
   network_interface {
