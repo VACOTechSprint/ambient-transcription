@@ -80,3 +80,25 @@ resource "google_storage_bucket" "output_bucket" {
   location      = "US"
   force_destroy = true
 }
+
+
+resource "google_storage_bucket" "frontend_bucket" {
+  name          = "vaco-frontend-app-bucket"
+  location      = "US"
+  force_destroy = true  # Allows Terraform to delete the bucket even if it contains objects. Use with caution.
+
+  website {
+    main_page_suffix = "index.html"
+    not_found_page   = "404.html"
+  }
+}
+
+# Grant public read access to the objects in the bucket
+resource "google_storage_bucket_iam_binding" "public_read" {
+  bucket = google_storage_bucket.frontend_bucket.name
+  role   = "roles/storage.objectViewer"
+
+  members = [
+    "allUsers",
+  ]
+}
