@@ -1,14 +1,21 @@
-const AudioPlayer = (props) => {
-  const playAudio = () => {
-      if (props.audioBlob) {
+import React, { useEffect, useRef } from 'react';
+
+const AudioPlayer = ({ audioBlob }) => {
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (audioBlob && audioRef.current) {
       const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audio.play();
+      audioRef.current.src = audioUrl;
+
+      // Cleanup function to revoke the object URL
+      return () => URL.revokeObjectURL(audioUrl);
     }
-  }
+  }, [audioBlob]);
 
-  return props.audioBlob ? <button onClick={playAudio}>Play Recording</button> : null;
-
+  return (
+    <div>
+      <audio ref={audioRef} controls />
+    </div>
+  );
 };
-
-export default AudioPlayer;
