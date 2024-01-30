@@ -28,3 +28,15 @@ resource "google_storage_bucket_object" "default" {
 output "function_url" {
   value = google_cloudfunctions_function.default.https_trigger_url
 }
+
+resource "google_cloudfunctions_function_iam_binding" "public_invoker" {
+  project = google_cloudfunctions_function.default.project
+  region = google_cloudfunctions_function.default.region
+  cloud_function = google_cloudfunctions_function.default.name
+
+  role = "roles/cloudfunctions.invoker"
+
+  members = [
+    "allUsers"
+  ]
+}
