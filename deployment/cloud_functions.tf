@@ -16,9 +16,13 @@ resource "google_storage_bucket" "default" {
 }
 
 resource "google_storage_bucket_object" "default" {
-  name   = "index.js.zip"
+  name   = "index-${timestamp()}.js.zip" # Dynamically generate a unique name
   bucket = google_storage_bucket.default.name
   source = "../cloud_functions/index.js.zip"
+
+    metadata = {
+    content-hash = "2a3e45dd37228b0ab82efba9e961fe28"
+  }
 }
 
 output "function_url" {
