@@ -1,0 +1,17 @@
+{
+  "name": "cloud_functions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "zip": "zip -r index.js.zip . -x \"*node_modules*\" \"*.git*\" \"*.DS_Store\"",
+    "deploy_functions": "pnpm run zip && cd ../deployment && terraform apply -auto-approve"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.3.0",
+    "@google-cloud/storage": "^7.7.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
