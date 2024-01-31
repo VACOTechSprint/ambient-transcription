@@ -5,12 +5,9 @@ const HelloWorld = () => {
   const [message, setMessage] = useState('');
 
   const fetchMessage = async () => {
-    const config = {
-      headers: { Authorization: `Bearer ${import.meta.env.VITE_APP_GCF_BEARER_TOKEN}` }
-    };
 
     try {
-      const response = await axios.get('https://us-east4-vacotechsprint.cloudfunctions.net/hello-world-function', config);
+      const response = await axios.get('https://us-east4-vacotechsprint.cloudfunctions.net/hello-world-function');
       setMessage(response.data);
     } catch (error) {
       console.error('Error:', error);
