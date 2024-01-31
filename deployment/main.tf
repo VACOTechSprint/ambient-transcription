@@ -54,6 +54,7 @@ resource "google_compute_instance" "whisperx_asr" {
     on_host_maintenance = "TERMINATE"
     preemptible         = true
     provisioning_model  = "SPOT"
+    instance_termination_action = "STOP"
   }
 
   service_account {
@@ -75,6 +76,13 @@ resource "google_storage_bucket" "upload_bucket" {
   name          = "vaco-upload-bucket"
   location      = "US"
   force_destroy = true  # Allows Terraform to delete the bucket even if it contains objects
+  cors {
+      origin          = ["http://localhost:5173"]
+      method          = ["GET", "PUT", "POST"]
+      response_header = ["Content-Type", "Authorization", "X-Goog-Resumable"]
+      max_age_seconds = 3600
+    }
+
 }
 
 resource "google_storage_bucket" "output_bucket" {
