@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const AudioUploader = () => {
+const AudioUploader = ({audioBlob}) => {
     const [uploadStatus, setUploadStatus] = useState('');
 
     const fetchSignedUrl = async (fileName) => {
@@ -16,7 +16,12 @@ const AudioUploader = () => {
         }
     };
 
-    const uploadAudio = async (audioBlob) => {
+    const uploadAudio = async () => {
+        if (!audioBlob) {
+            setUploadStatus('No audio blob provided');
+            return;
+        }
+
         const fileName = 'your-audio-file-name.webm'; // Set your desired file name here
         const signedUrl = await fetchSignedUrl(fileName);
 
@@ -25,6 +30,7 @@ const AudioUploader = () => {
         }
 
         try {
+            console.log('Uploading audioBlob:', audioBlob);
             const response = await axios.put(signedUrl, audioBlob, {
                 headers: {
                     'Content-Type': 'audio/webm', // Set the correct content type for your audio blob
@@ -33,23 +39,18 @@ const AudioUploader = () => {
             setUploadStatus('Upload successful');
             console.log('Upload response:', response);
         } catch (error) {
-            console.error('Error uploading audio:', error);
+            console.error('Error uploading audio:', error.message);
             setUploadStatus('Failed to upload audio');
         }
     };
 
-    // This function is just an example trigger for the upload process
-    const handleUploadClick = () => {
-        const exampleAudioBlob = new Blob(['Your audio data here'], { type: 'audio/webm' }); // Replace with your actual audio blob
-        uploadAudio(exampleAudioBlob);
-    };
-
     return (
         <div>
-            <button onClick={handleUploadClick}>Upload Audio</button>
+            <button onClick={uploadAudio}>Upload Audio</button>
             <p>Upload Status: {uploadStatus}</p>
         </div>
     );
 };
+
 
 export default AudioUploader;

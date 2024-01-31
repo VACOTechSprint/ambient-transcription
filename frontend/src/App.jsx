@@ -14,7 +14,7 @@ function App() {
             <HelloWorld />
             <AudioRecorder setAudioBlob={setAudioBlob} />
             <AudioPlayer audioBlob={audioBlob} />
-            <AudioUploader />
+            <AudioUploader audioBlob={audioBlob}/>
 
         </div>
     );
