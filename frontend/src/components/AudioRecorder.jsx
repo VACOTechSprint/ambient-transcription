@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 const AudioRecorder = (props) => {
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
-  // const [audioChunks, setAudioChunks] = useState([]);
   let audioChunks = [];
 
   const startRecording = async () => {
