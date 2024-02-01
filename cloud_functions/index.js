@@ -1,4 +1,5 @@
 const { corsMiddleware } = require('./corsMiddleware');
+const axios = require('axios');
 
 exports.helloWorld = (req, res) => {
   corsMiddleware(req, res, () => {
@@ -37,18 +38,32 @@ exports.generateSignedUrl = async (req, res) => {
   });
 };
 
-exports.asrPipelineFunction = (event, callback) => {
-  const file = event.data; // The Cloud Functions event data will contain the file metadata.
+exports.asrPipelineFunction = async (event, context) => {
+  let fileResponse; // Define outside to ensure availability throughout the function scope
 
-  if (file.resourceState === 'not_exists') {
-    console.log('This is a deletion event.');
-  } else if (file.metageneration === '1') {
-    // The metageneration attribute is incremented each time the metadata of an existing object changes.
-    // For newly created objects, this is 1.
-    console.log(`New file: ${file.name}`);
-  } else {
-    console.log(`File updated: ${file.name}`);
+  try {
+    const { mediaLink, name } = event;
+    console.log(`Processing file: ${name}`);
+
+    // Get the file from the Cloud Storage bucket
+    fileResponse = await axios({
+      method: 'get',
+      url: mediaLink,
+      responseType: 'arraybuffer'
+    });
+
+    // Upload the file to the ASR endpoint
+    const asrResponse = await axios({
+      method: 'post',
+      url: 'http://34.86.191.55:9000', // Replace with your ASR endpoint URL
+      data: fileResponse.data,
+      headers: {
+        'Content-Type': 'audio/webm', // Adjust the content type if necessary
+      }
+    });
+
+    console.log(`ASR Response: ${JSON.stringify(asrResponse.data)}`);
+  } catch (error) {
+    console.error('Error processing file:', error);
   }
-
-  callback(); // Complete the function execution
 };
