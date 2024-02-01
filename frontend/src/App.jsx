@@ -8,13 +8,14 @@ import AudioUploader from "./components/AudioUploader.jsx";
 
 function App() {
       const [audioBlob, setAudioBlob] = useState(null);
+      const [timestamp, setTimestamp] = useState(null);
 
     return (
         <div className="App">
             <HelloWorld />
-            <AudioRecorder setAudioBlob={setAudioBlob} />
+            <AudioRecorder setAudioBlob={setAudioBlob}  setTimestamp={setTimestamp} />
             <AudioPlayer audioBlob={audioBlob} />
-            <AudioUploader audioBlob={audioBlob}/>
+            <AudioUploader audioBlob={audioBlob} timestamp={timestamp}/>
 
         </div>
     );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-const AudioUploader = ({audioBlob}) => {
+const AudioUploader = (props) => {
     const [uploadStatus, setUploadStatus] = useState('');
 
     const fetchSignedUrl = async (fileName) => {
@@ -17,12 +17,13 @@ const AudioUploader = ({audioBlob}) => {
     };
 
     const uploadAudio = async () => {
+        const audioBlob = props.audioBlob
         if (!audioBlob) {
             setUploadStatus('No audio blob provided');
             return;
         }
 
-        const fileName = 'your-audio-file-name.webm'; // Set your desired file name here
+        const fileName = `${props.timestamp}.webm`; // Set your desired file name here
         const signedUrl = await fetchSignedUrl(fileName);
 
         if (!signedUrl) {

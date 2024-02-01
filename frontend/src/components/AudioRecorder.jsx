@@ -20,6 +20,17 @@ const AudioRecorder = (props) => {
       recorder.onstart = () => {
         console.log('Recording started'); // Debugging log
         setIsRecording(true);
+
+        const now = new Date();
+        const timestamp = now.getFullYear().toString() +
+                     (now.getMonth() + 1).toString().padStart(2, '0') +
+                     now.getDate().toString().padStart(2, '0') +
+                     now.getHours().toString().padStart(2, '0') +
+                     now.getMinutes().toString().padStart(2, '0') +
+                     now.getSeconds().toString().padStart(2, '0');
+        console.log(timestamp); // Debugging log
+        props.setTimestamp(timestamp)
+
       };
       recorder.onstop = () => {
         console.log('Recording stopped'); // Debugging log
@@ -37,7 +48,8 @@ const AudioRecorder = (props) => {
   };
 
   AudioRecorder.propTypes = {
-  setAudioBlob: PropTypes.func.isRequired,
+    setAudioBlob: PropTypes.func.isRequired,
+    setTimestamp: PropTypes.func.isRequired
 };
 
   const stopRecording = () => {
