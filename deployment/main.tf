@@ -3,6 +3,23 @@ provider "google" {
   region  = "us-east4"
 }
 
+resource "google_compute_firewall" "whisperx_asr_firewall" {
+  name    = "whisper-asr"
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["9000"]  # Update this based on the rule's actual allowed ports
+  }
+
+  allow {
+    protocol = "udp"
+    ports    = ["9000"]  # Update this based on the rule's actual allowed ports
+  }
+
+  target_tags = ["whisper-asr"]  # Ensure other properties like target tags match too
+}
+
 resource "google_compute_instance" "whisperx_asr" {
   boot_disk {
     auto_delete = true
@@ -40,6 +57,8 @@ resource "google_compute_instance" "whisperx_asr" {
   name = "whisperx-asr"
 
   network_interface {
+    network = "default"
+
     access_config {
       network_tier = "PREMIUM"
     }
