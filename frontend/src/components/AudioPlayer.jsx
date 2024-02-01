@@ -1,4 +1,7 @@
 import { useEffect, useRef } from 'react';
+import PropTypes from "prop-types";
+
+
 
 const AudioPlayer = ({ audioBlob }) => {
   const audioRef = useRef(null);
@@ -18,6 +21,11 @@ const AudioPlayer = ({ audioBlob }) => {
       <audio ref={audioRef} controls />
     </div>
   );
+};
+
+
+AudioPlayer.propTypes = {
+  audioBlob: PropTypes.instanceOf(Blob)
 };
 
 
