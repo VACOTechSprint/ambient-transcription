@@ -107,18 +107,18 @@ resource "google_cloudfunctions_function" "asr_pipeline" {
   available_memory_mb   = 128
   source_archive_bucket = google_storage_bucket.default.name
   source_archive_object = google_storage_bucket_object.default.name
-  entry_point           = "YOUR_FUNCTION_ENTRY_POINT"  # e.g., "sendFile"
+  entry_point           = "asrPipelineFunction"  # e.g., "sendFile"
 
   service_account_email = google_service_account.asr_function_sa.email
 
   environment_variables = {
     OUTPUT_BUCKET   = google_storage_bucket.output_bucket.name
-    FRONTEND_BUCKET = google_storage_bucket.frontend_bucket.name
+    UPLOAD_BUCKET = google_storage_bucket.frontend_bucket.name
   }
 
   event_trigger {
     event_type = "google.storage.object.finalize"
-    resource   = google_storage_bucket.frontend_bucket.id
+    resource   = google_storage_bucket.upload_bucket.id
   }
 }
 
@@ -127,14 +127,15 @@ resource "google_service_account" "asr_function_sa" {
   display_name = "Cloud Function Service Account"
 }
 
-resource "google_project_iam_member" "bucket_reader" {
-  project = google_cloudfunctions_function.asr_pipeline.project
+resource "google_storage_bucket_iam_member" "asr_bucket_reader" {
+  bucket = google_storage_bucket.upload_bucket.name
   role    = "roles/storage.objectViewer"
   member  = "serviceAccount:${google_service_account.asr_function_sa.email}"
 }
 
-resource "google_project_iam_member" "bucket_writer" {
-  project = google_cloudfunctions_function.asr_pipeline.project
+resource "google_storage_bucket_iam_member" "asr_bucket_writer" {
+  bucket = google_storage_bucket.output_bucket.name
   role    = "roles/storage.objectCreator"
   member  = "serviceAccount:${google_service_account.asr_function_sa.email}"
 }
+

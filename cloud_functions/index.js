@@ -36,3 +36,19 @@ exports.generateSignedUrl = async (req, res) => {
     }
   });
 };
+
+exports.asrPipelineFunction = (event, callback) => {
+  const file = event.data; // The Cloud Functions event data will contain the file metadata.
+
+  if (file.resourceState === 'not_exists') {
+    console.log('This is a deletion event.');
+  } else if (file.metageneration === '1') {
+    // The metageneration attribute is incremented each time the metadata of an existing object changes.
+    // For newly created objects, this is 1.
+    console.log(`New file: ${file.name}`);
+  } else {
+    console.log(`File updated: ${file.name}`);
+  }
+
+  callback(); // Complete the function execution
+};
