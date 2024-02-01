@@ -38,11 +38,21 @@ const AudioUploader = ({audioBlob}) => {
             });
             setUploadStatus('Upload successful');
             console.log('Upload response:', response);
-        } catch (error) {
-            console.error('Error uploading audio:', error.message);
-            setUploadStatus('Failed to upload audio');
+    } catch (error) {
+        console.error('Error uploading audio:', error.response ? error.response.data : error.message);
+        setUploadStatus(`Failed to upload audio: ${error.response ? error.response.data : error.message}`);
+
+        // Log detailed error information
+        if (error.response && error.response.data) {
+            const errorDetails = error.response.data;
+            console.error(`Error Code: ${errorDetails.Code}`);
+            console.error(`Error Message: ${errorDetails.Message}`);
+            if (errorDetails.Details) {
+                console.error(`Error Details: ${errorDetails.Details}`);
+            }
         }
-    };
+    }
+};
 
     return (
         <div>

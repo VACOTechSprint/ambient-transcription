@@ -85,3 +85,10 @@ resource "google_service_account_iam_member" "sa_token_creator" {
   role               = "roles/iam.serviceAccountTokenCreator"
   member             = "serviceAccount:${google_service_account.signed_url_function_sa.email}"
 }
+
+# Grant the service account permission to create objects in your bucket
+resource "google_storage_bucket_iam_member" "sa_object_creator" {
+  bucket = google_storage_bucket.upload_bucket.name
+  role   = "roles/storage.objectCreator"
+  member = "serviceAccount:${google_service_account.signed_url_function_sa.email}"
+}
