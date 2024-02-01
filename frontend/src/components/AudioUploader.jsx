@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
+import AudioPlayer from "./AudioPlayer.jsx";
+import PropTypes from "prop-types";
 
 const AudioUploader = (props) => {
     const [uploadStatus, setUploadStatus] = useState('');
@@ -63,5 +65,10 @@ const AudioUploader = (props) => {
     );
 };
 
+
+AudioUploader.propTypes = {
+    audioBlob: PropTypes.instanceOf(Blob),
+    timestamp: PropTypes.string
+};
 
 export default AudioUploader;
