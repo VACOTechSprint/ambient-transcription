@@ -1,5 +1,10 @@
 # VA AI Tech Sprint 4 - Provider Burnout Solution
 
+## Update 2024-02-05:
+I failed to submit the requirements before the Gate 1 deadline last Friday. Since late entries are not considered, we are effectively done with this project. We're going to leave this repo available for the time being for posterity, but do not plan on maintaining it. 
+
+---
+
 Welcome to the project management repository for our VA AI Tech Sprint 4 challenge entry, where we aim to tackle provider burnout through innovative AI-powered solutions. This README provides an overview of our project, instructions for contributors, and resources for our collaborators.
 
 ## About the Project
@@ -9,49 +14,38 @@ The Department of Veterans Affairs has initiated a competition to harness the po
 Our goal is to create a product that not only meets the stringent requirements set forth by the VA but also embodies the principles of ethical AI and open-source collaboration.
 
 ## Project Structure
-- `/docs`: Documentations, including competition requirements, guidelines, and rubrics.
-- `/src`: Source code for the transcription and diarization engine.
-- `/webapp`: Progressive web application front-end for recording and displaying transcriptions.
-- `/deployment`: Configuration and documentation for deploying the application to cloud environments.
+- `/cloud_functions`: Node functions deployed as Google Cloud Functions.
+- `/deployment`: Terraform configuration and documentation for deploying the application to Google Cloud environments.
 - `/design`: Mockups and design resources for the web application.
+- `/docs`: Client requirement files
+- `/frontend`: Vite/React frontend for the demo app
+
+## Additional Dependencies
+ASR: https://github.com/dahifi/whisper-asr-webservice/pull/new/fork/main
+    WhisperX Diaraization Pipeline. Fork of a fork, deployed as a cloud build to Google Compute instance with GPU support. 
+
 
 ## Getting Started
 
 ### Prerequisites
-- Git installed on your local machine
-- A modern web browser
-- Basic understanding of Docker and cloud services (optional but beneficial)
+- Google Cloud Services
+- Terraform
 
 ### Installation
-Clone the repository:
+The Terraform deployment scripts are hard-coded to the project name, in the future we'll take steps to make sure those are abstracted to env vars, so anyone who wants to fork this will probably need to update project name, region and unique IDs for bucket, functions, and so on. 
 
-```sh
-git clone https://github.com/VACOTechSprint/project-management.git
-cd project-management
-```
-Follow the setup instructions in each sub-directory's README for specific components of the project.
+The general installation instructions are as follows: 
+    - Build the docker image of the ASR endpoint repo listed above. 
+    - Run the terraform script to standup the ASR compute host with GPU. You will need to manually pull the docker image. 
+    - In the frontend directory, run dev or build preview to test the front end. There is a script to deploy the files to the front-end bucket. 
+
+The app should record audio data, send the blob to the ASR server. Transcribed text is returned to the user. 
 
 ## Contribution Guide
-We encourage contributions from the community. If you're interested in helping us shape the future of healthcare for our veterans, here's how you can get involved:
-
-* Explore Issues: Pick an issue that resonates with your skills or interests, or open a new one if you have an idea or feature request.
-* Fork & Feature Branch: Fork the repository and create a new branch for your feature.
-* Code Away: Implement your feature or fix using best coding practices.
-* Pull Request: Submit a pull request with a clear description of what you've done.
-* Review & Merge: Our team will review your contribution and merge it into the main branch if it meets our standards and aligns with the sprint goals.
-
-Please refer to our CONTRIBUTING.md for more details on our code of conduct and the process for submitting pull requests to us.
-
-## Testing
-Instructions for testing your contributions locally and documentation for our CI/CD pipeline can be found in the /testing directory.
-
-## Discussion & Collaboration
-We're using GitHub Discussions to collaboratively address challenges, brainstorm features, and support each other throughout the development process. Join the conversation [here](https://github.com/VACOTechSprint/project-management/discussions).
+This repo will not be maintained any further. 
 
 ## License
-This project is released under the MIT License.
+FWIW, this project is released under the MIT License. 
 
 ## Contact
-For any further queries or if you would like to join our team, introduce yourself in [Discussions](https://github.com/VACOTechSprint/project-management/discussions)
-
-Thank you for your interest in our project! Together, let's make a difference in the lives of those who have served.
+Feel free to reach out to one of the contacts listed on [my Github profile](https://github.com/dahifi)
