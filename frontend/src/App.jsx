@@ -17,7 +17,6 @@ function App() {
             <HelloWorld />
             <AudioRecorder setAudioBlob={setAudioBlob}  setTimestamp={setTimestamp} />
             <AudioPlayer audioBlob={audioBlob} />
-            {/*<AudioUploader audioBlob={audioBlob} timestamp={timestamp}/>*/}
             <ASRUploader audioBlob={audioBlob} timestamp={timestamp}/>
 
         </div>
